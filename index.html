@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador Multi-Player Minimal</title>
+    <style>
+        /* Estilos generales */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        /* --- VISTA DEL GENERADOR (FORMULARIO) --- */
+        #generator-ui {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+        }
+
+        .config-card {
+            background: #111;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        h2 { color: #00c6ff; text-align: center; margin-bottom: 25px; }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: #000;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #fff;
+            box-sizing: border-box;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 15px;
+            background: #00c6ff;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        #result-link {
+            display: none;
+            margin-top: 20px;
+            background: #222;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+            font-size: 0.8rem;
+            border: 1px dashed #00c6ff;
+        }
+
+        /* --- VISTA DEL REPRODUCTOR (LO QUE VERÁ EL USUARIO) --- */
+        #player-ui {
+            display: none; /* Se activa si hay parámetros en la URL */
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #options-overlay {
+            display: flex;
+            gap: 50px;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+
+        .option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .option-item:hover { transform: scale(1.1); }
+
+        .circle-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 0 25px rgba(0, 198, 255, 0.2);
+        }
+
+        .s1 { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+        .s2 { background: linear-gradient(135deg, #f39c12, #e67e22); }
+
+        .label { font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        #video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease;
+        }
+
+        #video-wrapper.active { opacity: 1; visibility: visible; }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        #btn-back {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- INTERFAZ GENERADOR -->
+    <div id="generator-ui">
+        <div class="config-card">
+            <h2>Generador de Link</h2>
+            <input type="text" id="in-s1" placeholder="URL Servidor 1 (Savefiles)">
+            <input type="text" id="in-s2" placeholder="URL Servidor 2 (Filelions)">
+            <button class="btn-generate" onclick="createLink()">Generar Link Único</button>
+            <div id="result-link">
+                <p style="margin:0 0 5px 0; color:#00c6ff;">Copia este link:</p>
+                <input type="text" id="final-url" readonly onclick="this.select()">
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERFAZ REPRODUCTOR -->
+    <div id="player-ui">
+        <button id="btn-back" onclick="goBack()">Cambiar Servidor</button>
+        
+        <div id="options-overlay">
+            <div class="option-item" onclick="startVideo('s1')">
+                <div class="circle-icon s1">S1</div>
+                <span class="label">Opción 1</span>
+            </div>
+            <div id="node-s2" class="option-item" onclick="startVideo('s2')" style="display:none;">
+                <div class="circle-icon s2">S2</div>
+                <span class="label">Opción 2</span>
+            </div>
+        </div>
+
+        <div id="video-wrapper">
+            <iframe id="main-iframe" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const urlS1 = params.get('s1');
+    const urlS2 = params.get('s2');
+
+    // Si existen parámetros, mostramos el reproductor directamente
+    if (urlS1) {
+        document.getElementById('generator-ui').style.display = 'none';
+        document.getElementById('player-ui').style.display = 'flex';
+        
+        // Si hay un segundo servidor, mostrar el botón
+        if (urlS2 && urlS2 !== 'null' && urlS2 !== '') {
+            document.getElementById('node-s2').style.display = 'flex';
+        }
+    }
+
+    function createLink() {
+        const s1 = document.getElementById('in-s1').value;
+        const s2 = document.getElementById('in-s2').value;
+
+        if (!s1) return alert("El Servidor 1 es obligatorio");
+
+        const baseUrl = window.location.href.split('?')[0];
+        const finalPath = `${baseUrl}?s1=${encodeURIComponent(s1)}&s2=${encodeURIComponent(s2)}`;
+        
+        document.getElementById('final-url').value = finalPath;
+        document.getElementById('result-link').style.display = 'block';
+    }
+
+    function startVideo(key) {
+        const overlay = document.getElementById('options-overlay');
+        const wrapper = document.getElementById('video-wrapper');
+        const iframe = document.getElementById('main-iframe');
+        const back = document.getElementById('btn-back');
+
+        const videoUrl = key === 's1' ? urlS1 : urlS2;
+
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.visibility = 'hidden';
+            iframe.src = videoUrl;
+            wrapper.classList.add('active');
+            back.style.display = 'block';
+        }, 500);
+    }
+
+    function goBack() {
+        const overlay = document.getElementById('options-overlay');
+        const wrapper = document.getElementById('video-wrapper');
+        const iframe = document.getElementById('main-iframe');
+        const back = document.getElementById('btn-back');
+
+        wrapper.classList.remove('active');
+        back.style.display = 'none';
+        
+        setTimeout(() => {
+            iframe.src = '';
+            overlay.style.visibility = 'visible';
+            overlay.style.opacity = '1';
+        }, 500);
+    }
+</script>
+
+</body>
+</html>
