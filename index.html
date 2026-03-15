@@ -47,21 +47,18 @@
             text-transform: uppercase; font-size: 13px; color: #000; transition: 0.3s;
         }
         .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4); }
-        .btn-main:disabled { background: #444; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-main:disabled { background: #444; cursor: not-allowed; transform: none; box-shadow: none; color: #888; }
 
-        /* --- PLAYER INTERFACE --- */
+        /* --- PLAYER --- */
         #ui-player {
             display: none; width: 100%; height: 100vh;
             justify-content: center; align-items: center;
             position: relative; background-size: cover; background-position: center;
         }
         #overlay-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.95) 100%); z-index: 1; }
-
         #content-wrapper { z-index: 10; width: 90%; max-width: 440px; text-align: center; }
 
-        .tabs-audio {
-            display: flex; gap: 15px; margin-bottom: 25px; justify-content: center;
-        }
+        .tabs-audio { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; }
         .tab-btn { cursor: pointer; text-align: center; opacity: 0.4; transition: 0.3s; min-width: 65px; display: none; }
         .tab-btn.active { opacity: 1; transform: translateY(-3px); }
         .tab-btn img { width: 42px; height: 28px; border-radius: 4px; display: block; margin: 0 auto 6px; border: 1px solid rgba(255,255,255,0.2); }
@@ -83,17 +80,13 @@
         .server-info h4 { margin: 0; font-size: 13px; font-weight: 800; }
         .server-info p { margin: 0; font-size: 10px; color: #aaa; text-transform: uppercase; margin-top: 2px; }
 
-        /* Video Layer */
         #video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; z-index: 100; background: #000; }
         #video-container.active { opacity: 1; visibility: visible; }
         iframe { width: 100%; height: 100%; border: none; }
         #btn-back { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6); color: #fff; border: 1px solid var(--neon-blue); padding: 8px 16px; border-radius: 5px; cursor: pointer; z-index: 200; display: none; font-size: 12px; font-weight: bold; }
 
-        #status-msg { font-size: 12px; color: var(--neon-blue); text-align: center; margin-top: 10px; display: none; }
-
-        /* Scrollbar Personalizada */
-        .server-list::-webkit-scrollbar { width: 5px; }
-        .server-list::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 10px; }
+        #status-msg { font-size: 12px; color: var(--neon-blue); text-align: center; margin-top: 10px; font-weight: bold; }
+        #box-link { display:none; margin-top:20px; border:1px dashed var(--neon-blue); padding:15px; background: #050505; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -103,49 +96,49 @@
         <div class="card">
             <h2 style="text-align:center; color:var(--neon-blue); margin-top:0; font-size: 22px;">Generador de ID Corto</h2>
             
-            <div style="max-height: 450px; overflow-y: auto; padding-right: 10px;">
-                <span class="section-label">🇲🇽 Audio Latino (Hasta 4)</span>
+            <div style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+                <span class="section-label">🇲🇽 Latino (Hasta 4)</span>
                 <div class="grid-inputs">
-                    <input type="text" class="lat-in" placeholder="Servidor 1">
-                    <input type="text" class="lat-in" placeholder="Servidor 2">
-                    <input type="text" class="lat-in" placeholder="Servidor 3">
-                    <input type="text" class="lat-in" placeholder="Servidor 4">
+                    <input type="text" class="lat-in" placeholder="Link 1">
+                    <input type="text" class="lat-in" placeholder="Link 2">
+                    <input type="text" class="lat-in" placeholder="Link 3">
+                    <input type="text" class="lat-in" placeholder="Link 4">
                 </div>
 
-                <span class="section-label">🇪🇸 Audio Castellano (Hasta 4)</span>
+                <span class="section-label">🇪🇸 Castellano</span>
                 <div class="grid-inputs">
-                    <input type="text" class="cas-in" placeholder="Servidor 1">
-                    <input type="text" class="cas-in" placeholder="Servidor 2">
-                    <input type="text" class="cas-in" placeholder="Servidor 3">
-                    <input type="text" class="cas-in" placeholder="Servidor 4">
+                    <input type="text" class="cas-in" placeholder="Link 1">
+                    <input type="text" class="cas-in" placeholder="Link 2">
+                    <input type="text" class="cas-in" placeholder="Link 3">
+                    <input type="text" class="cas-in" placeholder="Link 4">
                 </div>
 
-                <span class="section-label">🇯🇵 Audio Japonés (Hasta 4)</span>
+                <span class="section-label">🇯🇵 Japonés</span>
                 <div class="grid-inputs">
-                    <input type="text" class="jap-in" placeholder="Servidor 1">
-                    <input type="text" class="jap-in" placeholder="Servidor 2">
-                    <input type="text" class="jap-in" placeholder="Servidor 3">
-                    <input type="text" class="jap-in" placeholder="Servidor 4">
+                    <input type="text" class="jap-in" placeholder="Link 1">
+                    <input type="text" class="jap-in" placeholder="Link 2">
+                    <input type="text" class="jap-in" placeholder="Link 3">
+                    <input type="text" class="jap-in" placeholder="Link 4">
                 </div>
 
-                <span class="section-label">🇺🇸 Audio Inglés (Hasta 4)</span>
+                <span class="section-label">🇺🇸 Inglés</span>
                 <div class="grid-inputs">
-                    <input type="text" class="ing-in" placeholder="Servidor 1">
-                    <input type="text" class="ing-in" placeholder="Servidor 2">
-                    <input type="text" class="ing-in" placeholder="Servidor 3">
-                    <input type="text" class="ing-in" placeholder="Servidor 4">
+                    <input type="text" class="ing-in" placeholder="Link 1">
+                    <input type="text" class="ing-in" placeholder="Link 2">
+                    <input type="text" class="ing-in" placeholder="Link 3">
+                    <input type="text" class="ing-in" placeholder="Link 4">
                 </div>
 
-                <span class="section-label">Configuración Visual</span>
-                <input type="text" id="bg-in" placeholder="URL Imagen de Fondo (Poster)">
+                <span class="section-label">Póster</span>
+                <input type="text" id="bg-in" placeholder="URL Imagen de Fondo">
             </div>
             
-            <button class="btn-main" id="btn-build">Subir y Generar Link</button>
-            <div id="status-msg">Guardando en base de datos...</div>
+            <button class="btn-main" id="btn-build">Cargando Sistema...</button>
+            <div id="status-msg"></div>
             
-            <div id="box-link" style="display:none; margin-top:20px; border:1px dashed var(--neon-blue); padding:15px; background: #050505; border-radius: 8px;">
-                <input type="text" id="out-url" readonly style="margin-bottom: 10px; font-family: monospace; font-size: 11px; color: var(--neon-blue);">
-                <button id="btn-copy" style="width:100%; background:var(--neon-blue); border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius: 5px;">COPIAR ENLACE CORTO</button>
+            <div id="box-link">
+                <input type="text" id="out-url" readonly style="margin-bottom: 10px; font-family: monospace; font-size: 11px; color: var(--neon-blue); text-align: center;">
+                <button id="btn-copy" style="width:100%; background:var(--neon-blue); border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius: 5px; color: #000;">COPIAR ENLACE</button>
             </div>
         </div>
     </div>
@@ -154,21 +147,18 @@
     <div id="ui-player">
         <div id="overlay-bg"></div>
         <button id="btn-back">Regresar al Menú</button>
-        
         <div id="content-wrapper">
             <div class="tabs-audio">
                 <div class="tab-btn" id="btn-lat" data-lang="lat"><img src="https://flagcdn.com/w80/mx.png"><span>Latino</span></div>
-                <div class="tab-btn" id="btn-cas" data-lang="cas"><img src="https://flagcdn.com/w80/es.png"><span>Castellano</span></div>
+                <div class="tab-btn" id="btn-cas" data-lang="cas"><img src="https://flagcdn.com/w80/es.png"><span>Español</span></div>
                 <div class="tab-btn" id="btn-jap" data-lang="jap"><img src="https://flagcdn.com/w80/jp.png"><span>Japonés</span></div>
                 <div class="tab-btn" id="btn-ing" data-lang="ing"><img src="https://flagcdn.com/w80/us.png"><span>Inglés</span></div>
             </div>
-
             <div id="list-lat" class="server-list"></div>
             <div id="list-cas" class="server-list"></div>
             <div id="list-jap" class="server-list"></div>
             <div id="list-ing" class="server-list"></div>
         </div>
-
         <div id="video-container"><iframe id="main-ifr" src="" allowfullscreen></iframe></div>
     </div>
 
@@ -181,13 +171,27 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'multiaudio-elite';
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'multi-audio-v4';
 
-    let userAuth = null;
-    signInAnonymously(auth).catch(e => console.error(e));
-    onAuthStateChanged(auth, u => { userAuth = u; });
+    const btnBuild = document.getElementById('btn-build');
+    const statusMsg = document.getElementById('status-msg');
+    let isReady = false;
 
-    // --- REPRODUCTOR ---
+    // Autenticación obligatoria antes de cualquier operación
+    async function startAuth() {
+        try {
+            await signInAnonymously(auth);
+            isReady = true;
+            btnBuild.innerText = "Subir y Generar Link";
+            console.log("Auth OK");
+        } catch (e) {
+            btnBuild.innerText = "Error de Conexión";
+            console.error(e);
+        }
+    }
+    startAuth();
+
+    // LÓGICA DE CARGA DEL REPRODUCTOR
     const urlParams = new URLSearchParams(window.location.search);
     const docId = urlParams.get('id');
 
@@ -196,47 +200,45 @@
         document.getElementById('ui-player').style.display = 'flex';
         
         const loadContent = async () => {
-            const snap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', docId));
-            if (snap.exists()) {
-                const data = snap.data();
-                if (data.bg) document.getElementById('ui-player').style.backgroundImage = `url('${data.bg}')`;
-                
-                const langs = ['lat', 'cas', 'jap', 'ing'];
-                const labels = ['LATINO', 'ESPAÑOL', 'JAPONÉS', 'INGLÉS'];
-                let first = null;
+            try {
+                const snap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', docId));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    if (data.bg) document.getElementById('ui-player').style.backgroundImage = `url('${data.bg}')`;
+                    
+                    const langs = ['lat', 'cas', 'jap', 'ing'];
+                    const labels = ['LATINO', 'CASTELLANO', 'JAPONÉS', 'INGLÉS'];
+                    let first = null;
 
-                langs.forEach((l, i) => {
-                    const validLinks = data[l].filter(url => url.trim() !== "");
-                    if (validLinks.length > 0) {
-                        renderServers(validLinks, `list-${l}`, labels[i]);
-                        document.getElementById(`btn-${l}`).style.display = 'block';
-                        if (!first) first = l;
-                    }
-                });
-                if (first) switchAudio(first);
-            } else {
-                alert("Error: El contenido no existe.");
-            }
+                    langs.forEach((l, i) => {
+                        const links = data[l] ? data[l].filter(url => url.trim() !== "") : [];
+                        if (links.length > 0) {
+                            const listDiv = document.getElementById(`list-${l}`);
+                            links.forEach((url, idx) => {
+                                const item = document.createElement('div');
+                                item.className = 'server-item';
+                                item.onclick = () => {
+                                    document.getElementById('main-ifr').src = url;
+                                    document.getElementById('video-container').classList.add('active');
+                                    document.getElementById('btn-back').style.display = 'block';
+                                };
+                                item.innerHTML = `<div class="play-icon">▶</div><div class="server-info"><h4>OPCIÓN ${idx+1}</h4><p>SERVIDOR | ${labels[i]}</p></div>`;
+                                listDiv.appendChild(item);
+                            });
+                            document.getElementById(`btn-${l}`).style.display = 'block';
+                            if (!first) first = l;
+                        }
+                    });
+                    if (first) switchTab(first);
+                } else {
+                    alert("El ID no existe.");
+                }
+            } catch (e) { console.error(e); }
         };
         loadContent();
     }
 
-    function renderServers(links, containerId, label) {
-        const container = document.getElementById(containerId);
-        links.forEach((url, i) => {
-            const div = document.createElement('div');
-            div.className = 'server-item';
-            div.onclick = () => {
-                document.getElementById('main-ifr').src = url;
-                document.getElementById('video-container').classList.add('active');
-                document.getElementById('btn-back').style.display = 'block';
-            };
-            div.innerHTML = `<div class="play-icon">▶</div><div class="server-info"><h4>OPCIÓN ${i+1}</h4><p>SERVIDOR | ${label}</p></div>`;
-            container.appendChild(div);
-        });
-    }
-
-    function switchAudio(lang) {
+    function switchTab(lang) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.server-list').forEach(l => l.classList.remove('active'));
         document.getElementById('btn-' + lang).classList.add('active');
@@ -244,7 +246,7 @@
     }
 
     document.querySelectorAll('.tab-btn').forEach(b => {
-        b.onclick = () => switchAudio(b.dataset.lang);
+        b.onclick = () => switchTab(b.dataset.lang);
     });
 
     document.getElementById('btn-back').onclick = () => {
@@ -253,46 +255,48 @@
         document.getElementById('main-ifr').src = '';
     };
 
-    // --- GENERADOR ---
-    document.getElementById('btn-build').onclick = async () => {
-        if (!userAuth) return alert("Conectando con el servidor...");
+    // LÓGICA DE GENERACIÓN
+    btnBuild.onclick = async () => {
+        if (!isReady) return;
         
-        const btn = document.getElementById('btn-build');
-        const status = document.getElementById('status-msg');
-        
-        btn.disabled = true;
-        status.style.display = 'block';
+        btnBuild.disabled = true;
+        btnBuild.innerText = "Guardando...";
+        statusMsg.innerText = "Procesando servidores...";
 
-        const getValues = cls => Array.from(document.querySelectorAll(cls)).map(i => i.value);
+        const getInps = cls => Array.from(document.querySelectorAll(cls)).map(i => i.value.trim());
+        
         const payload = {
-            lat: getValues('.lat-in'),
-            cas: getValues('.cas-in'),
-            jap: getValues('.jap-in'),
-            ing: getValues('.ing-in'),
-            bg: document.getElementById('bg-in').value,
-            date: Date.now()
+            lat: getInps('.lat-in'),
+            cas: getInps('.cas-in'),
+            jap: getInps('.jap-in'),
+            ing: getInps('.ing-in'),
+            bg: document.getElementById('bg-in').value.trim(),
+            ts: Date.now()
         };
 
-        // ID corto aleatorio de 6 caracteres
-        const shortID = Math.random().toString(36).substring(2, 8).toUpperCase();
+        // Generar ID de 6 caracteres
+        const sid = Math.random().toString(36).substring(2, 8).toUpperCase();
 
         try {
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', shortID), payload);
-            const finalLink = `${window.location.href.split('?')[0]}?id=${shortID}`;
-            document.getElementById('out-url').value = finalLink;
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', sid), payload);
+            const link = window.location.origin + window.location.pathname + "?id=" + sid;
+            document.getElementById('out-url').value = link;
             document.getElementById('box-link').style.display = 'block';
+            statusMsg.innerText = "¡Enlace generado con éxito!";
         } catch (e) {
-            alert("Error al guardar en la base de datos.");
+            console.error(e);
+            statusMsg.innerText = "Error al guardar. Intenta de nuevo.";
         } finally {
-            btn.disabled = false;
-            status.style.display = 'none';
+            btnBuild.disabled = false;
+            btnBuild.innerText = "Subir y Generar Link";
         }
     };
 
     document.getElementById('btn-copy').onclick = () => {
-        const input = document.getElementById('out-url');
-        input.select();
+        const inp = document.getElementById('out-url');
+        inp.select();
         document.execCommand("copy");
+        alert("Enlace copiado");
     };
 </script>
 </body>
