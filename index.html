@@ -3,54 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador Multi-Player Ultra</title>
+    <title>Generador Multi-Player Pro</title>
     <style>
+        :root {
+            --neon-blue: #00d4ff;
+            --bg-dark: #000000;
+            --card-bg: rgba(10, 11, 14, 0.9);
+        }
+
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
+            background-color: var(--bg-dark);
             color: #fff;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
         }
 
-        /* --- GENERADOR (VISTA EDITOR) --- */
+        /* --- GENERADOR (INPUTS) --- */
         #ui-generator {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            background: #111;
+            overflow-y: auto;
         }
 
         .card {
-            background: #0d0d0d;
-            padding: 30px;
-            border-radius: 20px;
+            background: #000;
+            padding: 25px;
+            border-radius: 15px;
             border: 1px solid #333;
             width: 90%;
             max-width: 450px;
             text-align: center;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
         }
 
-        h2 { color: #00d4ff; margin-bottom: 20px; font-weight: 300; letter-spacing: 1px; }
+        h2 { color: var(--neon-blue); margin-bottom: 20px; font-weight: 300; }
         
         input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            background: #050505;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #0a0a0a;
             border: 1px solid #444;
-            border-radius: 8px;
+            border-radius: 6px;
             color: #fff;
             box-sizing: border-box;
             outline: none;
         }
-
-        input:focus { border-color: #00d4ff; }
 
         .btn-group {
             display: grid;
@@ -61,22 +65,21 @@
 
         .btn-main {
             padding: 14px;
-            background: #00d4ff;
+            background: var(--neon-blue);
             border: none;
             color: #000;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             text-transform: uppercase;
         }
 
         .btn-clear {
             padding: 14px;
-            background: #333;
+            background: #222;
             border: none;
             color: #fff;
-            font-weight: bold;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
         }
 
@@ -84,83 +87,91 @@
             display: none;
             margin-top: 20px;
             padding: 15px;
-            background: #111;
-            border-radius: 10px;
-            border: 1px dashed #00d4ff;
+            background: #050505;
+            border-radius: 8px;
+            border: 1px dashed var(--neon-blue);
         }
 
-        .copy-area {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
+        .copy-area { display: flex; gap: 5px; margin-top: 10px; }
+        
         .btn-copy {
-            background: #00d4ff;
+            background: var(--neon-blue);
             border: none;
-            color: #000;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 5px 15px;
+            border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
-            white-space: nowrap;
         }
 
-        /* --- PLAYER (VISTA FINAL) --- */
+        /* --- PLAYER (RESULTADO) --- */
         #ui-player {
             display: none;
             width: 100%;
             height: 100vh;
             justify-content: center;
             align-items: center;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Capa oscura sobre el fondo de imagen */
+        #overlay-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1;
         }
 
         #menu-selector {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
+            gap: 15px;
+            width: 90%;
+            max-width: 500px;
             z-index: 10;
-            transition: all 0.5s ease;
         }
 
-        .node {
+        .server-card {
+            background: var(--card-bg);
+            border: 2px solid var(--neon-blue);
+            border-radius: 10px;
+            padding: 25px 15px;
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .node:hover { transform: scale(1.1); }
-
-        /* Iconos más pequeños según lo solicitado */
-        .icon {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #fff;
+            min-height: 80px;
         }
 
-        .c1 { background: linear-gradient(135deg, #00c6ff, #0072ff); }
-        .c2 { background: linear-gradient(135deg, #f39c12, #e67e22); }
-        .c3 { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
-        .c4 { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .server-card:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0,212,255,0.4); }
 
-        .tag { font-size: 11px; font-weight: 600; color: #777; letter-spacing: 1px; }
+        .card-num {
+            position: absolute;
+            top: 8px; left: 10px;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--neon-blue);
+        }
 
+        .card-name {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        /* Video */
         #video-container {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.6s ease;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; visibility: hidden;
+            z-index: 100;
+            background: #000;
         }
 
         #video-container.active { opacity: 1; visibility: visible; }
@@ -169,15 +180,14 @@
         #btn-back {
             position: absolute;
             top: 15px; right: 15px;
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: none;
-            z-index: 100;
-            font-size: 12px;
+            background: rgba(255,255,255,0.2);
+            color: #fff; border: none;
+            padding: 8px 15px; border-radius: 5px;
+            cursor: pointer; z-index: 200; display: none;
+        }
+
+        @media (max-width: 480px) {
+            #menu-selector { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -187,15 +197,20 @@
     <div id="ui-generator">
         <div class="card">
             <h2>Generador Pro</h2>
-            
-            <input type="text" id="in-s1" placeholder="URL Servidor 1">
-            <input type="text" id="in-s2" placeholder="URL Servidor 2">
-            <input type="text" id="in-s3" placeholder="URL Servidor 3">
-            <input type="text" id="in-s4" placeholder="URL Servidor 4">
+            <div id="inputs-area">
+                <input type="text" class="link-in" placeholder="URL Servidor 1">
+                <input type="text" class="link-in" placeholder="URL Servidor 2">
+                <input type="text" class="link-in" placeholder="URL Servidor 3">
+                <input type="text" class="link-in" placeholder="URL Servidor 4">
+                <input type="text" class="link-in" placeholder="URL Servidor 5">
+                <input type="text" class="link-in" placeholder="URL Servidor 6">
+                <p style="font-size: 11px; color: #777; margin: 10px 0 5px;">Imagen de Fondo (Opcional):</p>
+                <input type="text" id="bg-img-in" placeholder="URL de Imagen (Fondo)">
+            </div>
             
             <div class="btn-group">
                 <button class="btn-main" onclick="build()">Generar</button>
-                <button class="btn-clear" onclick="clearAll()">Recargar</button>
+                <button class="btn-clear" onclick="location.reload()">Recargar</button>
             </div>
 
             <div id="box-link">
@@ -209,96 +224,87 @@
 
     <!-- PLAYER -->
     <div id="ui-player">
-        <button id="btn-back" onclick="reset()">Cambiar Opción</button>
-        <div id="menu-selector">
-            <div id="n1" class="node" style="display:none" onclick="go('s1')"><div class="icon c1">S1</div><span class="tag">OPCIÓN 1</span></div>
-            <div id="n2" class="node" style="display:none" onclick="go('s2')"><div class="icon c2">S2</div><span class="tag">OPCIÓN 2</span></div>
-            <div id="n3" class="node" style="display:none" onclick="go('s3')"><div class="icon c3">S3</div><span class="tag">OPCIÓN 3</span></div>
-            <div id="n4" class="node" style="display:none" onclick="go('s4')"><div class="icon c4">S4</div><span class="tag">OPCIÓN 4</span></div>
-        </div>
+        <div id="overlay-bg"></div>
+        <button id="btn-back" onclick="closeVideo()">Cerrar Película</button>
+        <div id="menu-selector"></div>
+        
         <div id="video-container">
-            <!-- Sandbox eliminado para máxima compatibilidad -->
             <iframe id="main-ifr" src="" allowfullscreen></iframe>
         </div>
     </div>
 
 <script>
     const q = new URLSearchParams(window.location.search);
-    const links = {
-        s1: q.get('s1'),
-        s2: q.get('s2'),
-        s3: q.get('s3'),
-        s4: q.get('s4')
-    };
+    const dataEncoded = q.get('v');
 
-    if (links.s1) {
+    if (dataEncoded) {
         document.getElementById('ui-generator').style.display = 'none';
         document.getElementById('ui-player').style.display = 'flex';
-        for(let i=1; i<=4; i++) {
-            if(links['s'+i] && links['s'+i] !== 'null' && links['s'+i] !== '') {
-                document.getElementById('n'+i).style.display = 'flex';
+        
+        try {
+            const decoded = JSON.parse(atob(dataEncoded));
+            const selector = document.getElementById('menu-selector');
+            
+            // Poner fondo
+            if (decoded.bg) {
+                document.getElementById('ui-player').style.backgroundImage = `url('${decoded.bg}')`;
             }
-        }
+
+            decoded.links.forEach((url, i) => {
+                if (url && url.trim() !== "") {
+                    const card = document.createElement('div');
+                    card.className = 'server-card';
+                    card.onclick = () => openVideo(url);
+                    
+                    card.innerHTML = `
+                        <div class="card-num">S${i+1}</div>
+                        <div class="card-name">OPCIÓN ${i+1}</div>
+                    `;
+                    selector.appendChild(card);
+                }
+            });
+        } catch(e) { console.log("Error decodificando"); }
     }
 
     function build() {
-        const s1 = document.getElementById('in-s1').value;
-        const s2 = document.getElementById('in-s2').value;
-        const s3 = document.getElementById('in-s3').value;
-        const s4 = document.getElementById('in-s4').value;
-        if(!s1) return alert("Pega la URL 1");
+        const inputs = document.querySelectorAll('.link-in');
+        const bg = document.getElementById('bg-img-in').value;
+        const links = Array.from(inputs).map(i => i.value).filter(v => v !== "");
 
+        if (links.length === 0) return alert("Pon al menos un link");
+
+        const data = btoa(JSON.stringify({ links, bg }));
         const base = window.location.href.split('?')[0];
-        const res = `${base}?s1=${encodeURIComponent(s1)}&s2=${encodeURIComponent(s2)}&s3=${encodeURIComponent(s3)}&s4=${encodeURIComponent(s4)}`;
         
-        document.getElementById('out-url').value = res;
+        document.getElementById('out-url').value = `${base}?v=${data}`;
         document.getElementById('box-link').style.display = 'block';
-        document.getElementById('btn-copy-action').innerText = "Copiar";
-    }
-
-    function clearAll() {
-        document.getElementById('in-s1').value = "";
-        document.getElementById('in-s2').value = "";
-        document.getElementById('in-s3').value = "";
-        document.getElementById('in-s4').value = "";
-        document.getElementById('box-link').style.display = 'none';
     }
 
     function copyLink() {
-        const copyText = document.getElementById("out-url");
-        copyText.select();
+        const out = document.getElementById('out-url');
+        out.select();
         document.execCommand("copy");
-        document.getElementById('btn-copy-action').innerText = "¡Copiado!";
+        document.getElementById('btn-copy-action').innerText = "Copiado";
     }
 
-    function go(k) {
-        const menu = document.getElementById('menu-selector');
-        const container = document.getElementById('video-container');
-        const iframe = document.getElementById('main-ifr');
+    function openVideo(url) {
+        const ifr = document.getElementById('main-ifr');
+        const cont = document.getElementById('video-container');
         const btn = document.getElementById('btn-back');
-
-        menu.style.opacity = '0';
-        setTimeout(() => {
-            menu.style.visibility = 'hidden';
-            iframe.src = links[k];
-            container.classList.add('active');
-            btn.style.display = 'block';
-        }, 400);
+        
+        ifr.src = url;
+        cont.classList.add('active');
+        btn.style.display = 'block';
     }
 
-    function reset() {
-        const menu = document.getElementById('menu-selector');
-        const container = document.getElementById('video-container');
-        const iframe = document.getElementById('main-ifr');
+    function closeVideo() {
+        const ifr = document.getElementById('main-ifr');
+        const cont = document.getElementById('video-container');
         const btn = document.getElementById('btn-back');
-
-        container.classList.remove('active');
+        
+        cont.classList.remove('active');
         btn.style.display = 'none';
-        setTimeout(() => {
-            iframe.src = '';
-            menu.style.visibility = 'visible';
-            menu.style.opacity = '1';
-        }, 400);
+        ifr.src = '';
     }
 </script>
 
