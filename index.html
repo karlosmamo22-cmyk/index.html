@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Audio Player Elite</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js" type="module"></script>
-    
+    <title>Multi-Audio Player Ultra</title>
     <style>
         :root {
             --neon-blue: #00d4ff;
@@ -47,22 +42,22 @@
             text-transform: uppercase; font-size: 13px; color: #000; transition: 0.3s;
         }
         .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4); }
-        .btn-main:disabled { background: #444; cursor: not-allowed; transform: none; box-shadow: none; color: #888; }
 
-        /* --- PLAYER --- */
+        /* --- PLAYER INTERFACE --- */
         #ui-player {
             display: none; width: 100%; height: 100vh;
             justify-content: center; align-items: center;
             position: relative; background-size: cover; background-position: center;
         }
         #overlay-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.95) 100%); z-index: 1; }
+
         #content-wrapper { z-index: 10; width: 90%; max-width: 440px; text-align: center; }
 
-        .tabs-audio { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; }
-        .tab-btn { cursor: pointer; text-align: center; opacity: 0.4; transition: 0.3s; min-width: 65px; display: none; }
+        .tabs-audio { display: flex; gap: 12px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
+        .tab-btn { cursor: pointer; text-align: center; opacity: 0.4; transition: 0.3s; min-width: 60px; display: none; }
         .tab-btn.active { opacity: 1; transform: translateY(-3px); }
-        .tab-btn img { width: 42px; height: 28px; border-radius: 4px; display: block; margin: 0 auto 6px; border: 1px solid rgba(255,255,255,0.2); }
-        .tab-btn span { font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .tab-btn img { width: 38px; height: 26px; border-radius: 4px; display: block; margin: 0 auto 6px; border: 1px solid rgba(255,255,255,0.2); }
+        .tab-btn span { font-size: 10px; font-weight: bold; text-transform: uppercase; }
 
         .server-list { display: none; flex-direction: column; gap: 10px; max-height: 55vh; overflow-y: auto; padding: 5px; }
         .server-list.active { display: flex; }
@@ -85,74 +80,62 @@
         iframe { width: 100%; height: 100%; border: none; }
         #btn-back { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6); color: #fff; border: 1px solid var(--neon-blue); padding: 8px 16px; border-radius: 5px; cursor: pointer; z-index: 200; display: none; font-size: 12px; font-weight: bold; }
 
-        #status-msg { font-size: 12px; color: var(--neon-blue); text-align: center; margin-top: 10px; font-weight: bold; }
         #box-link { display:none; margin-top:20px; border:1px dashed var(--neon-blue); padding:15px; background: #050505; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-    <!-- GENERADOR -->
     <div id="ui-generator">
         <div class="card">
-            <h2 style="text-align:center; color:var(--neon-blue); margin-top:0; font-size: 22px;">Generador de ID Corto</h2>
+            <h2 style="text-align:center; color:var(--neon-blue); margin-top:0; font-size: 22px;">Generador Multi-Audio</h2>
             
             <div style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
-                <span class="section-label">🇲🇽 Latino (Hasta 4)</span>
+                <span class="section-label">🇲🇽 Latino</span>
                 <div class="grid-inputs">
-                    <input type="text" class="lat-in" placeholder="Link 1">
-                    <input type="text" class="lat-in" placeholder="Link 2">
-                    <input type="text" class="lat-in" placeholder="Link 3">
-                    <input type="text" class="lat-in" placeholder="Link 4">
+                    <input type="text" class="lat-in" placeholder="S1"><input type="text" class="lat-in" placeholder="S2">
+                    <input type="text" class="lat-in" placeholder="S3"><input type="text" class="lat-in" placeholder="S4">
                 </div>
 
                 <span class="section-label">🇪🇸 Castellano</span>
                 <div class="grid-inputs">
-                    <input type="text" class="cas-in" placeholder="Link 1">
-                    <input type="text" class="cas-in" placeholder="Link 2">
-                    <input type="text" class="cas-in" placeholder="Link 3">
-                    <input type="text" class="cas-in" placeholder="Link 4">
+                    <input type="text" class="cas-in" placeholder="S1"><input type="text" class="cas-in" placeholder="S2">
+                    <input type="text" class="cas-in" placeholder="S3"><input type="text" class="cas-in" placeholder="S4">
                 </div>
 
                 <span class="section-label">🇯🇵 Japonés</span>
                 <div class="grid-inputs">
-                    <input type="text" class="jap-in" placeholder="Link 1">
-                    <input type="text" class="jap-in" placeholder="Link 2">
-                    <input type="text" class="jap-in" placeholder="Link 3">
-                    <input type="text" class="jap-in" placeholder="Link 4">
+                    <input type="text" class="jap-in" placeholder="S1"><input type="text" class="jap-in" placeholder="S2">
+                    <input type="text" class="jap-in" placeholder="S3"><input type="text" class="jap-in" placeholder="S4">
                 </div>
 
                 <span class="section-label">🇺🇸 Inglés</span>
                 <div class="grid-inputs">
-                    <input type="text" class="ing-in" placeholder="Link 1">
-                    <input type="text" class="ing-in" placeholder="Link 2">
-                    <input type="text" class="ing-in" placeholder="Link 3">
-                    <input type="text" class="ing-in" placeholder="Link 4">
+                    <input type="text" class="ing-in" placeholder="S1"><input type="text" class="ing-in" placeholder="S2">
+                    <input type="text" class="ing-in" placeholder="S3"><input type="text" class="ing-in" placeholder="S4">
                 </div>
 
-                <span class="section-label">Póster</span>
-                <input type="text" id="bg-in" placeholder="URL Imagen de Fondo">
+                <span class="section-label">Imagen Fondo</span>
+                <input type="text" id="bg-in" placeholder="URL Poster">
             </div>
             
-            <button class="btn-main" id="btn-build">Cargando Sistema...</button>
-            <div id="status-msg"></div>
+            <button class="btn-main" onclick="buildLink()">GENERAR ENLACE</button>
             
             <div id="box-link">
-                <input type="text" id="out-url" readonly style="margin-bottom: 10px; font-family: monospace; font-size: 11px; color: var(--neon-blue); text-align: center;">
-                <button id="btn-copy" style="width:100%; background:var(--neon-blue); border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius: 5px; color: #000;">COPIAR ENLACE</button>
+                <input type="text" id="out-url" readonly style="margin-bottom: 10px; font-size: 10px; color: var(--neon-blue); text-align: center;">
+                <button onclick="copyLink()" style="width:100%; background:var(--neon-blue); border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius: 5px; color: #000;">COPIAR</button>
             </div>
         </div>
     </div>
 
-    <!-- PLAYER -->
     <div id="ui-player">
         <div id="overlay-bg"></div>
-        <button id="btn-back">Regresar al Menú</button>
+        <button id="btn-back" onclick="closeVideo()">Regresar al Menú</button>
         <div id="content-wrapper">
             <div class="tabs-audio">
-                <div class="tab-btn" id="btn-lat" data-lang="lat"><img src="https://flagcdn.com/w80/mx.png"><span>Latino</span></div>
-                <div class="tab-btn" id="btn-cas" data-lang="cas"><img src="https://flagcdn.com/w80/es.png"><span>Español</span></div>
-                <div class="tab-btn" id="btn-jap" data-lang="jap"><img src="https://flagcdn.com/w80/jp.png"><span>Japonés</span></div>
-                <div class="tab-btn" id="btn-ing" data-lang="ing"><img src="https://flagcdn.com/w80/us.png"><span>Inglés</span></div>
+                <div class="tab-btn" id="btn-lat" onclick="switchAudio('lat')"><img src="https://flagcdn.com/w80/mx.png"><span>Latino</span></div>
+                <div class="tab-btn" id="btn-cas" onclick="switchAudio('cas')"><img src="https://flagcdn.com/w80/es.png"><span>Español</span></div>
+                <div class="tab-btn" id="btn-jap" onclick="switchAudio('jap')"><img src="https://flagcdn.com/w80/jp.png"><span>Japonés</span></div>
+                <div class="tab-btn" id="btn-ing" onclick="switchAudio('ing')"><img src="https://flagcdn.com/w80/us.png"><span>Inglés</span></div>
             </div>
             <div id="list-lat" class="server-list"></div>
             <div id="list-cas" class="server-list"></div>
@@ -162,142 +145,76 @@
         <div id="video-container"><iframe id="main-ifr" src="" allowfullscreen></iframe></div>
     </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+<script>
+    // CARGAR DATOS SI EXISTEN EN URL
+    const q = new URLSearchParams(window.location.search);
+    const v = q.get('v');
 
-    const firebaseConfig = JSON.parse(__firebase_config);
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'multi-audio-v4';
-
-    const btnBuild = document.getElementById('btn-build');
-    const statusMsg = document.getElementById('status-msg');
-    let isReady = false;
-
-    // Autenticación obligatoria antes de cualquier operación
-    async function startAuth() {
-        try {
-            await signInAnonymously(auth);
-            isReady = true;
-            btnBuild.innerText = "Subir y Generar Link";
-            console.log("Auth OK");
-        } catch (e) {
-            btnBuild.innerText = "Error de Conexión";
-            console.error(e);
-        }
-    }
-    startAuth();
-
-    // LÓGICA DE CARGA DEL REPRODUCTOR
-    const urlParams = new URLSearchParams(window.location.search);
-    const docId = urlParams.get('id');
-
-    if (docId) {
+    if (v) {
         document.getElementById('ui-generator').style.display = 'none';
         document.getElementById('ui-player').style.display = 'flex';
         
-        const loadContent = async () => {
-            try {
-                const snap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', docId));
-                if (snap.exists()) {
-                    const data = snap.data();
-                    if (data.bg) document.getElementById('ui-player').style.backgroundImage = `url('${data.bg}')`;
-                    
-                    const langs = ['lat', 'cas', 'jap', 'ing'];
-                    const labels = ['LATINO', 'CASTELLANO', 'JAPONÉS', 'INGLÉS'];
-                    let first = null;
+        const data = JSON.parse(atob(v));
+        if (data.bg) document.getElementById('ui-player').style.backgroundImage = `url('${data.bg}')`;
+        
+        const langs = ['lat', 'cas', 'jap', 'ing'];
+        const labels = ['LATINO', 'ESPAÑOL', 'JAPONÉS', 'INGLÉS'];
+        let first = null;
 
-                    langs.forEach((l, i) => {
-                        const links = data[l] ? data[l].filter(url => url.trim() !== "") : [];
-                        if (links.length > 0) {
-                            const listDiv = document.getElementById(`list-${l}`);
-                            links.forEach((url, idx) => {
-                                const item = document.createElement('div');
-                                item.className = 'server-item';
-                                item.onclick = () => {
-                                    document.getElementById('main-ifr').src = url;
-                                    document.getElementById('video-container').classList.add('active');
-                                    document.getElementById('btn-back').style.display = 'block';
-                                };
-                                item.innerHTML = `<div class="play-icon">▶</div><div class="server-info"><h4>OPCIÓN ${idx+1}</h4><p>SERVIDOR | ${labels[i]}</p></div>`;
-                                listDiv.appendChild(item);
-                            });
-                            document.getElementById(`btn-${l}`).style.display = 'block';
-                            if (!first) first = l;
-                        }
-                    });
-                    if (first) switchTab(first);
-                } else {
-                    alert("El ID no existe.");
-                }
-            } catch (e) { console.error(e); }
-        };
-        loadContent();
+        langs.forEach((l, i) => {
+            const links = data[l].filter(u => u.trim() !== "");
+            if (links.length > 0) {
+                const list = document.getElementById(`list-${l}`);
+                links.forEach((url, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'server-item';
+                    item.onclick = () => {
+                        document.getElementById('main-ifr').src = url;
+                        document.getElementById('video-container').classList.add('active');
+                        document.getElementById('btn-back').style.display = 'block';
+                    };
+                    item.innerHTML = `<div class="play-icon">▶</div><div class="server-info"><h4>OPCIÓN ${idx+1}</h4><p>SERVIDOR | ${labels[i]}</p></div>`;
+                    list.appendChild(item);
+                });
+                document.getElementById(`btn-${l}`).style.display = 'block';
+                if (!first) first = l;
+            }
+        });
+        if (first) switchAudio(first);
     }
 
-    function switchTab(lang) {
+    function switchAudio(lang) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.server-list').forEach(l => l.classList.remove('active'));
         document.getElementById('btn-' + lang).classList.add('active');
         document.getElementById('list-' + lang).classList.add('active');
     }
 
-    document.querySelectorAll('.tab-btn').forEach(b => {
-        b.onclick = () => switchTab(b.dataset.lang);
-    });
-
-    document.getElementById('btn-back').onclick = () => {
-        document.getElementById('video-container').classList.remove('active');
-        document.getElementById('btn-back').style.display = 'none';
-        document.getElementById('main-ifr').src = '';
-    };
-
-    // LÓGICA DE GENERACIÓN
-    btnBuild.onclick = async () => {
-        if (!isReady) return;
-        
-        btnBuild.disabled = true;
-        btnBuild.innerText = "Guardando...";
-        statusMsg.innerText = "Procesando servidores...";
-
-        const getInps = cls => Array.from(document.querySelectorAll(cls)).map(i => i.value.trim());
-        
-        const payload = {
-            lat: getInps('.lat-in'),
-            cas: getInps('.cas-in'),
-            jap: getInps('.jap-in'),
-            ing: getInps('.ing-in'),
-            bg: document.getElementById('bg-in').value.trim(),
-            ts: Date.now()
+    function buildLink() {
+        const getVals = cls => Array.from(document.querySelectorAll(cls)).map(i => i.value.trim());
+        const data = {
+            lat: getVals('.lat-in'),
+            cas: getVals('.cas-in'),
+            jap: getVals('.jap-in'),
+            ing: getVals('.ing-in'),
+            bg: document.getElementById('bg-in').value
         };
+        const encoded = btoa(JSON.stringify(data));
+        document.getElementById('out-url').value = window.location.href.split('?')[0] + "?v=" + encoded;
+        document.getElementById('box-link').style.display = 'block';
+    }
 
-        // Generar ID de 6 caracteres
-        const sid = Math.random().toString(36).substring(2, 8).toUpperCase();
-
-        try {
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', sid), payload);
-            const link = window.location.origin + window.location.pathname + "?id=" + sid;
-            document.getElementById('out-url').value = link;
-            document.getElementById('box-link').style.display = 'block';
-            statusMsg.innerText = "¡Enlace generado con éxito!";
-        } catch (e) {
-            console.error(e);
-            statusMsg.innerText = "Error al guardar. Intenta de nuevo.";
-        } finally {
-            btnBuild.disabled = false;
-            btnBuild.innerText = "Subir y Generar Link";
-        }
-    };
-
-    document.getElementById('btn-copy').onclick = () => {
+    function copyLink() {
         const inp = document.getElementById('out-url');
         inp.select();
         document.execCommand("copy");
-        alert("Enlace copiado");
-    };
+    }
+
+    function closeVideo() {
+        document.getElementById('video-container').classList.remove('active');
+        document.getElementById('btn-back').style.display = 'none';
+        document.getElementById('main-ifr').src = '';
+    }
 </script>
 </body>
 </html>
