@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Pro | Anti-Block</title>
+    <title>Player Pro | Custom Order</title>
     <style>
         :root {
             --neon-blue: #00d4ff;
@@ -77,7 +77,7 @@
         #video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; z-index: 100; background: #000; }
         #video-container.active { opacity: 1; visibility: visible; }
         
-        /* Iframe limpio sin sandbox para evitar bloqueos */
+        /* Iframe limpio sin sandbox */
         iframe { width: 100%; height: 100%; border: none; }
 
         #btn-back { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: #fff; border: 1px solid var(--neon-blue); padding: 8px 16px; border-radius: 5px; cursor: pointer; z-index: 200; display: none; font-size: 12px; font-weight: bold; }
@@ -87,38 +87,37 @@
 </head>
 <body>
 
-    <!-- GENERADOR -->
     <div id="ui-generator">
         <div class="card">
-            <h2 style="text-align:center; color:var(--neon-blue); margin-top:0; font-size: 22px;">Generador de Link</h2>
+            <h2 style="text-align:center; color:var(--neon-blue); margin-top:0; font-size: 22px;">Generador Multi-Audio</h2>
             
-            <div style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
+            <div style="max-height: 420px; overflow-y: auto; padding-right: 10px;">
                 <span class="section-label">🇲🇽 Latino (Máx 4)</span>
                 <div class="grid-inputs">
-                    <input type="text" class="lat-in" placeholder="URL 1"><input type="text" class="lat-in" placeholder="URL 2">
-                    <input type="text" class="lat-in" placeholder="URL 3"><input type="text" class="lat-in" placeholder="URL 4">
-                </div>
-
-                <span class="section-label">🇪🇸 Castellano (Máx 4)</span>
-                <div class="grid-inputs">
-                    <input type="text" class="cas-in" placeholder="URL 1"><input type="text" class="cas-in" placeholder="URL 2">
-                    <input type="text" class="cas-in" placeholder="URL 3"><input type="text" class="cas-in" placeholder="URL 4">
+                    <input type="text" class="lat-in" placeholder="L1"><input type="text" class="lat-in" placeholder="L2">
+                    <input type="text" class="lat-in" placeholder="L3"><input type="text" class="lat-in" placeholder="L4">
                 </div>
 
                 <span class="section-label">🇯🇵 Japonés (Máx 4)</span>
                 <div class="grid-inputs">
-                    <input type="text" class="jap-in" placeholder="URL 1"><input type="text" class="jap-in" placeholder="URL 2">
-                    <input type="text" class="jap-in" placeholder="URL 3"><input type="text" class="jap-in" placeholder="URL 4">
+                    <input type="text" class="jap-in" placeholder="J1"><input type="text" class="jap-in" placeholder="J2">
+                    <input type="text" class="jap-in" placeholder="J3"><input type="text" class="jap-in" placeholder="J4">
+                </div>
+
+                <span class="section-label">🇪🇸 Castellano (Máx 4)</span>
+                <div class="grid-inputs">
+                    <input type="text" class="cas-in" placeholder="C1"><input type="text" class="cas-in" placeholder="C2">
+                    <input type="text" class="cas-in" placeholder="C3"><input type="text" class="cas-in" placeholder="C4">
                 </div>
 
                 <span class="section-label">🇺🇸 Inglés (Máx 4)</span>
                 <div class="grid-inputs">
-                    <input type="text" class="ing-in" placeholder="URL 1"><input type="text" class="ing-in" placeholder="URL 2">
-                    <input type="text" class="ing-in" placeholder="URL 3"><input type="text" class="ing-in" placeholder="URL 4">
+                    <input type="text" class="ing-in" placeholder="I1"><input type="text" class="ing-in" placeholder="I2">
+                    <input type="text" class="ing-in" placeholder="I3"><input type="text" class="ing-in" placeholder="I4">
                 </div>
 
-                <span class="section-label">Poster URL</span>
-                <input type="text" id="bg-in" placeholder="Imagen de fondo">
+                <span class="section-label">Poster URL (Fondo)</span>
+                <input type="text" id="bg-in" placeholder="URL de la imagen">
             </div>
             
             <button class="btn-main" onclick="buildLink()">GENERAR ENLACE LARGO</button>
@@ -130,29 +129,23 @@
         </div>
     </div>
 
-    <!-- PLAYER -->
     <div id="ui-player">
         <div id="overlay-bg"></div>
         <button id="btn-back" onclick="closeVideo()">Regresar al Menú</button>
         <div id="content-wrapper">
             <div class="tabs-audio">
                 <div class="tab-btn" id="btn-lat" onclick="switchAudio('lat')"><img src="https://flagcdn.com/w80/mx.png"><span>Latino</span></div>
-                <div class="tab-btn" id="btn-cas" onclick="switchAudio('cas')"><img src="https://flagcdn.com/w80/es.png"><span>Español</span></div>
                 <div class="tab-btn" id="btn-jap" onclick="switchAudio('jap')"><img src="https://flagcdn.com/w80/jp.png"><span>Japonés</span></div>
+                <div class="tab-btn" id="btn-cas" onclick="switchAudio('cas')"><img src="https://flagcdn.com/w80/es.png"><span>Español</span></div>
                 <div class="tab-btn" id="btn-ing" onclick="switchAudio('ing')"><img src="https://flagcdn.com/w80/us.png"><span>Inglés</span></div>
             </div>
             <div id="list-lat" class="server-list"></div>
-            <div id="list-cas" class="server-list"></div>
             <div id="list-jap" class="server-list"></div>
+            <div id="list-cas" class="server-list"></div>
             <div id="list-ing" class="server-list"></div>
         </div>
         <div id="video-container">
-            <!-- Iframe sin sandbox para permitir carga de servidores de video -->
-            <iframe id="main-ifr" 
-                    src="" 
-                    allowfullscreen 
-                    allow="autoplay; fullscreen; picture-in-picture">
-            </iframe>
+            <iframe id="main-ifr" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
         </div>
     </div>
 
@@ -165,39 +158,38 @@
         document.getElementById('ui-player').style.display = 'flex';
         
         try {
-            // Decodificación segura para caracteres especiales
             const decodedData = decodeURIComponent(escape(atob(v)));
             const data = JSON.parse(decodedData);
 
             if (data.bg) document.getElementById('ui-player').style.backgroundImage = `url('${data.bg}')`;
             
-            const langs = ['lat', 'cas', 'jap', 'ing'];
-            const labels = ['LATINO', 'CASTELLANO', 'JAPONÉS', 'INGLÉS'];
+            const order = ['lat', 'jap', 'cas', 'ing'];
+            const names = ['LATINO', 'JAPONÉS', 'CASTELLANO', 'INGLÉS'];
             let first = null;
 
-            langs.forEach((l, i) => {
-                const links = data[l].filter(u => u && u.trim() !== "");
-                if (links.length > 0) {
-                    const list = document.getElementById(`list-${l}`);
-                    links.forEach((url, idx) => {
-                        const item = document.createElement('div');
-                        item.className = 'server-item';
-                        item.onclick = () => {
-                            document.getElementById('main-ifr').src = url;
-                            document.getElementById('video-container').classList.add('active');
-                            document.getElementById('btn-back').style.display = 'block';
-                        };
-                        item.innerHTML = `<div class="play-icon">▶</div><div class="server-info"><h4>OPCIÓN ${idx+1}</h4><p>SERVIDOR | ${labels[i]}</p></div>`;
-                        list.appendChild(item);
-                    });
-                    document.getElementById(`btn-${l}`).style.display = 'block';
-                    if (!first) first = l;
+            order.forEach((l, i) => {
+                if (data[l]) {
+                    const links = data[l].filter(u => u && u.trim() !== "");
+                    if (links.length > 0) {
+                        const list = document.getElementById(`list-${l}`);
+                        links.forEach((url, idx) => {
+                            const item = document.createElement('div');
+                            item.className = 'server-item';
+                            item.onclick = () => {
+                                document.getElementById('main-ifr').src = url;
+                                document.getElementById('video-container').classList.add('active');
+                                document.getElementById('btn-back').style.display = 'block';
+                            };
+                            item.innerHTML = `<div class="play-icon">▶</div><div class="server-info"><h4>OPCIÓN ${idx+1}</h4><p>SERVIDOR | ${names[i]}</p></div>`;
+                            list.appendChild(item);
+                        });
+                        document.getElementById(`btn-${l}`).style.display = 'block';
+                        if (!first) first = l;
+                    }
                 }
             });
             if (first) switchAudio(first);
-        } catch(e) {
-            console.error("Error al cargar datos");
-        }
+        } catch(e) { console.error(e); }
     }
 
     function switchAudio(lang) {
@@ -211,17 +203,13 @@
         const getVals = cls => Array.from(document.querySelectorAll(cls)).map(i => i.value.trim());
         const data = {
             lat: getVals('.lat-in'),
-            cas: getVals('.cas-in'),
             jap: getVals('.jap-in'),
+            cas: getVals('.cas-in'),
             ing: getVals('.ing-in'),
             bg: document.getElementById('bg-in').value
         };
-        // Codificación Base64 robusta
-        const jsonStr = JSON.stringify(data);
-        const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
-        
-        const finalUrl = window.location.href.split('?')[0] + "?v=" + encoded;
-        document.getElementById('out-url').value = finalUrl;
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+        document.getElementById('out-url').value = window.location.origin + window.location.pathname + "?v=" + encoded;
         document.getElementById('box-link').style.display = 'block';
     }
 
@@ -229,6 +217,7 @@
         const inp = document.getElementById('out-url');
         inp.select();
         document.execCommand("copy");
+        alert("Enlace copiado correctamente.");
     }
 
     function closeVideo() {
@@ -236,10 +225,8 @@
         document.getElementById('btn-back').style.display = 'none';
         document.getElementById('main-ifr').src = '';
     }
+</script>
 <script src="https://pl28936734.effectivegatecpm.com/ea/90/e3/ea90e38a4bbd2d275204683e5e2a6930.js"></script>
-<script src="https://pl28936734.effectivegatecpm.com/ea/90/e3/ea90e38a4bbd2d275204683e5e2a6930.js"></script>
-<script src="https://pl28936734.effectivegatecpm.com/ea/90/e3/ea90e38a4bbd2d275204683e5e2a6930.js"></script>
-<script src="https://pl28936734.effectivegatecpm.com/ea/90/e3/ea90e38a4bbd2d275204683e5e2a6930.js"></script>
-<script src="https://pl28936734.effectivegatecpm.com/ea/90/e3/ea90e38a4bbd2d275204683e5e2a6930.js"></script>
+<script src="https://pl28936734.effectivegatecpm.com/ea/90/e3/ea90e38a4bbd2d275204683e5e2a6930.js"></script>    
 </body>
 </html>
