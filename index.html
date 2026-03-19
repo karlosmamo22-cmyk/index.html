@@ -3,43 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Pro | Custom Order</title>
+    <title>Player Pro | Dynamic UI</title>
     <style>
         :root {
             --neon-blue: #00d4ff;
             --bg-dark: #000000;
-            --card-bg: rgba(20, 22, 28, 0.95);
-            --item-hover: rgba(0, 212, 255, 0.15);
+            --card-bg: rgba(10, 10, 12, 0.95);
+            --item-hover: rgba(0, 212, 255, 0.12);
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             background-color: var(--bg-dark);
-            color: #fff; font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #fff; font-family: 'Inter', -apple-system, sans-serif;
             overflow: hidden;
+            user-select: none;
         }
 
         /* --- GENERADOR --- */
         #ui-generator {
             display: flex; justify-content: center; align-items: center;
-            height: 100vh; background: #0a0a0a; overflow-y: auto; padding: 20px; box-sizing: border-box;
+            height: 100vh; background: #050505; overflow-y: auto; padding: 20px; box-sizing: border-box;
         }
         .card { 
-            background: #000; padding: 25px; border-radius: 15px; border: 1px solid #222; 
-            width: 100%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #000; padding: 20px; border-radius: 12px; border: 1px solid #1a1a1a; 
+            width: 100%; max-width: 480px; box-shadow: 0 0 40px rgba(0,0,0,0.8);
         }
-        .section-label { color: var(--neon-blue); font-size: 11px; font-weight: bold; margin: 15px 0 8px; display: block; text-transform: uppercase; letter-spacing: 1px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .section-group { margin-bottom: 15px; background: #0a0a0a; padding: 10px; border-radius: 8px; border: 1px solid #111; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .section-label { color: var(--neon-blue); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+        
+        .btn-add { background: var(--neon-blue); border: none; color: #000; border-radius: 4px; padding: 2px 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        
+        .input-list { display: flex; flex-direction: column; gap: 6px; }
+        .input-row { display: flex; gap: 5px; }
+        .btn-del { background: #ff4444; border: none; color: white; border-radius: 4px; padding: 0 8px; cursor: pointer; font-size: 12px; }
+
         input { 
-            width: 100%; padding: 10px; background: #080808; border: 1px solid #333; 
-            border-radius: 6px; color: #fff; box-sizing: border-box; font-size: 12px; outline: none; 
+            flex: 1; padding: 8px 12px; background: #000; border: 1px solid #222; 
+            border-radius: 5px; color: #fff; font-size: 11px; outline: none; 
         }
         input:focus { border-color: var(--neon-blue); }
+
         .btn-main { 
-            width: 100%; padding: 16px; background: var(--neon-blue); border: none; 
-            font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; 
-            text-transform: uppercase; font-size: 13px; color: #000; transition: 0.3s;
+            width: 100%; padding: 14px; background: var(--neon-blue); border: none; 
+            font-weight: 800; border-radius: 6px; cursor: pointer; margin-top: 10px; 
+            text-transform: uppercase; font-size: 11px; color: #000; letter-spacing: 1px;
         }
 
         /* --- PLAYER INTERFACE --- */
@@ -48,88 +58,121 @@
             justify-content: center; align-items: center;
             position: relative; background-size: cover; background-position: center;
         }
-        #overlay-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.95) 100%); z-index: 1; }
+        #overlay-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%); z-index: 1; }
 
-        #content-wrapper { z-index: 10; width: 90%; max-width: 440px; text-align: center; }
+        #content-wrapper { z-index: 10; width: 95%; max-width: 380px; text-align: center; }
 
-        .tabs-audio { display: flex; gap: 12px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
-        .tab-btn { cursor: pointer; text-align: center; opacity: 0.4; transition: 0.3s; min-width: 60px; display: none; }
-        .tab-btn.active { opacity: 1; transform: translateY(-3px); }
-        .tab-btn img { width: 40px; height: 26px; border-radius: 4px; display: block; margin: 0 auto 6px; border: 1px solid rgba(255,255,255,0.2); }
-        .tab-btn span { font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        /* Banderas Mini */
+        .tabs-audio { display: flex; gap: 6px; margin-bottom: 15px; justify-content: center; flex-wrap: wrap; }
+        .tab-btn { cursor: pointer; text-align: center; opacity: 0.3; transition: 0.3s; min-width: 45px; display: none; }
+        .tab-btn.active { opacity: 1; transform: scale(1.05); }
+        .tab-btn img { width: 28px; height: 18px; border-radius: 2px; display: block; margin: 0 auto 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+        .tab-btn span { font-size: 8px; font-weight: 800; text-transform: uppercase; color: #ccc; }
 
-        .server-list { display: none; flex-direction: column; gap: 10px; max-height: 55vh; overflow-y: auto; padding: 5px; }
+        /* Servidores Mini */
+        .server-list { display: none; flex-direction: column; gap: 6px; max-height: 50vh; overflow-y: auto; padding: 4px; scrollbar-width: thin; }
         .server-list.active { display: flex; }
 
         .server-item {
             background: var(--card-bg);
-            border-radius: 10px; padding: 14px 18px;
+            border-radius: 6px; padding: 8px 12px;
             display: flex; align-items: center;
-            gap: 15px; cursor: pointer;
-            transition: 0.2s; border: 1px solid rgba(0, 212, 255, 0.3);
+            gap: 10px; cursor: pointer;
+            transition: 0.2s; border: 1px solid rgba(255, 255, 255, 0.03);
         }
-        .server-item:hover { background: var(--item-hover); transform: translateX(5px); border-color: var(--neon-blue); }
-        .play-icon { color: var(--neon-blue); font-size: 18px; }
-        .server-info { text-align: left; }
-        .server-info h4 { margin: 0; font-size: 13px; font-weight: 800; }
-        .server-info p { margin: 0; font-size: 10px; color: #aaa; text-transform: uppercase; margin-top: 2px; }
+        .server-item:hover { background: var(--item-hover); border-color: var(--neon-blue); }
+        .play-icon { color: var(--neon-blue); font-size: 11px; opacity: 0.8; }
+        
+        .server-info h4 { margin: 0; font-size: 10px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+        .server-info p { margin: 0; font-size: 7px; color: #666; text-transform: uppercase; margin-top: 1px; letter-spacing: 0.3px; }
 
+        /* Video Contenedor */
         #video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; z-index: 100; background: #000; }
         #video-container.active { opacity: 1; visibility: visible; }
-        
-        /* Iframe limpio sin sandbox */
         iframe { width: 100%; height: 100%; border: none; }
 
-        #btn-back { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: #fff; border: 1px solid var(--neon-blue); padding: 8px 16px; border-radius: 5px; cursor: pointer; z-index: 200; display: none; font-size: 12px; font-weight: bold; }
+        /* Botón de Regreso Inteligente */
+        #btn-back { 
+            position: absolute; top: 15px; right: 15px; 
+            background: rgba(0,0,0,0.7); color: #fff; 
+            border: 1px solid rgba(0, 212, 255, 0.5); 
+            padding: 5px 12px; border-radius: 4px; 
+            cursor: pointer; z-index: 200; 
+            font-size: 9px; font-weight: bold; 
+            text-transform: uppercase;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+            pointer-events: auto;
+            opacity: 0;
+            display: none;
+        }
+        #btn-back:hover { background: var(--neon-blue); color: #000; border-color: var(--neon-blue); }
+        #btn-back.visible { opacity: 1; transform: translateY(0); }
 
-        #box-link { display:none; margin-top:20px; border:1px dashed var(--neon-blue); padding:15px; background: #050505; border-radius: 8px; }
+        #box-link { display:none; margin-top:15px; border:1px solid #222; padding:12px; background: #050505; border-radius: 8px; }
+        
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
     </style>
 </head>
 <body>
 
+    <!-- GENERADOR DINÁMICO -->
     <div id="ui-generator">
         <div class="card">
-            <h2 style="text-align:center; color:var(--neon-blue); margin-top:0; font-size: 22px;">Generador Multi-Audio</h2>
+            <h2 style="text-align:center; color:var(--neon-blue); margin-top:0; font-size: 16px; letter-spacing: 1px;">SISTEMA MULTI-AUDIO V4</h2>
             
-            <div style="max-height: 420px; overflow-y: auto; padding-right: 10px;">
-                <span class="section-label">🇲🇽 Latino (Máx 4)</span>
-                <div class="grid-inputs">
-                    <input type="text" class="lat-in" placeholder="L1"><input type="text" class="lat-in" placeholder="L2">
-                    <input type="text" class="lat-in" placeholder="L3"><input type="text" class="lat-in" placeholder="L4">
+            <div style="max-height: 440px; overflow-y: auto; padding-right: 5px;">
+                <!-- LATINO -->
+                <div class="section-group">
+                    <div class="section-header">
+                        <span class="section-label">🇲🇽 Latino</span>
+                        <button class="btn-add" onclick="addInput('lat')">+</button>
+                    </div>
+                    <div id="cont-lat" class="input-list"><input type="text" class="lat-in" placeholder="Pegar Link"></div>
                 </div>
 
-                <span class="section-label">🇯🇵 Japonés (Máx 4)</span>
-                <div class="grid-inputs">
-                    <input type="text" class="jap-in" placeholder="J1"><input type="text" class="jap-in" placeholder="J2">
-                    <input type="text" class="jap-in" placeholder="J3"><input type="text" class="jap-in" placeholder="J4">
+                <!-- JAPONÉS -->
+                <div class="section-group">
+                    <div class="section-header">
+                        <span class="section-label">🇯🇵 Japonés</span>
+                        <button class="btn-add" onclick="addInput('jap')">+</button>
+                    </div>
+                    <div id="cont-jap" class="input-list"><input type="text" class="jap-in" placeholder="Pegar Link"></div>
                 </div>
 
-                <span class="section-label">🇪🇸 Castellano (Máx 4)</span>
-                <div class="grid-inputs">
-                    <input type="text" class="cas-in" placeholder="C1"><input type="text" class="cas-in" placeholder="C2">
-                    <input type="text" class="cas-in" placeholder="C3"><input type="text" class="cas-in" placeholder="C4">
+                <!-- CASTELLANO -->
+                <div class="section-group">
+                    <div class="section-header">
+                        <span class="section-label">🇪🇸 Castellano</span>
+                        <button class="btn-add" onclick="addInput('cas')">+</button>
+                    </div>
+                    <div id="cont-cas" class="input-list"><input type="text" class="cas-in" placeholder="Pegar Link"></div>
                 </div>
 
-                <span class="section-label">🇺🇸 Inglés (Máx 4)</span>
-                <div class="grid-inputs">
-                    <input type="text" class="ing-in" placeholder="I1"><input type="text" class="ing-in" placeholder="I2">
-                    <input type="text" class="ing-in" placeholder="I3"><input type="text" class="ing-in" placeholder="I4">
+                <!-- INGLÉS -->
+                <div class="section-group">
+                    <div class="section-header">
+                        <span class="section-label">🇺🇸 Inglés</span>
+                        <button class="btn-add" onclick="addInput('ing')">+</button>
+                    </div>
+                    <div id="cont-ing" class="input-list"><input type="text" class="ing-in" placeholder="Pegar Link"></div>
                 </div>
 
-                <span class="section-label">Poster URL (Fondo)</span>
-                <input type="text" id="bg-in" placeholder="URL de la imagen">
+                <span class="section-label" style="display:block; margin: 10px 0 5px;">Imagen de Fondo (URL)</span>
+                <input type="text" id="bg-in" placeholder="https://ejemplo.com/poster.jpg" style="width: 100%;">
             </div>
             
-            <button class="btn-main" onclick="buildLink()">GENERAR ENLACE LARGO</button>
+            <button class="btn-main" onclick="buildLink()">GENERAR ENLACE REPRODUCTOR</button>
             
             <div id="box-link">
-                <input type="text" id="out-url" readonly style="margin-bottom: 10px; font-size: 10px; color: var(--neon-blue); text-align: center;">
-                <button onclick="copyLink()" style="width:100%; background:var(--neon-blue); border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius: 5px; color: #000;">COPIAR ENLACE</button>
+                <input type="text" id="out-url" readonly style="margin-bottom: 8px; font-size: 9px; color: var(--neon-blue); text-align: center;">
+                <button onclick="copyLink()" style="width:100%; background:var(--neon-blue); border:none; padding:8px; font-weight:bold; cursor:pointer; border-radius: 4px; color: #000; font-size: 10px;">COPIAR LINK</button>
             </div>
         </div>
     </div>
 
-    <div id="ui-player">
+    <!-- PLAYER -->
+    <div id="ui-player" onmousemove="showControls()" ontouchstart="showControls()">
         <div id="overlay-bg"></div>
         <button id="btn-back" onclick="closeVideo()">Regresar al Menú</button>
         <div id="content-wrapper">
@@ -144,12 +187,37 @@
             <div id="list-cas" class="server-list"></div>
             <div id="list-ing" class="server-list"></div>
         </div>
-        <div id="video-container">
+        <div id="video-container" onmousemove="showControls()" ontouchstart="showControls()">
             <iframe id="main-ifr" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
         </div>
     </div>
 
 <script>
+    let timer;
+
+    // Control del botón de regreso (desvanecimiento)
+    function showControls() {
+        const btn = document.getElementById('btn-back');
+        if (document.getElementById('video-container').classList.contains('active')) {
+            btn.classList.add('visible');
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                btn.classList.remove('visible');
+            }, 3000); // Se oculta tras 3 segundos
+        }
+    }
+
+    function addInput(lang) {
+        const container = document.getElementById(`cont-${lang}`);
+        const div = document.createElement('div');
+        div.className = 'input-row';
+        div.innerHTML = `
+            <input type="text" class="${lang}-in" placeholder="URL Servidor">
+            <button class="btn-del" onclick="this.parentElement.remove()">×</button>
+        `;
+        container.appendChild(div);
+    }
+
     const q = new URLSearchParams(window.location.search);
     const v = q.get('v');
 
@@ -158,13 +226,11 @@
         document.getElementById('ui-player').style.display = 'flex';
         
         try {
-            const decodedData = decodeURIComponent(escape(atob(v)));
-            const data = JSON.parse(decodedData);
-
+            const data = JSON.parse(decodeURIComponent(escape(atob(v))));
             if (data.bg) document.getElementById('ui-player').style.backgroundImage = `url('${data.bg}')`;
             
             const order = ['lat', 'jap', 'cas', 'ing'];
-            const names = ['LATINO', 'JAPONÉS', 'CASTELLANO', 'INGLÉS'];
+            const names = ['Latino', 'Japonés', 'Castellano', 'Inglés'];
             let first = null;
 
             order.forEach((l, i) => {
@@ -179,8 +245,15 @@
                                 document.getElementById('main-ifr').src = url;
                                 document.getElementById('video-container').classList.add('active');
                                 document.getElementById('btn-back').style.display = 'block';
+                                showControls(); // Mostrar inmediatamente al cargar video
                             };
-                            item.innerHTML = `<div class="play-icon">▶</div><div class="server-info"><h4>OPCIÓN ${idx+1}</h4><p>SERVIDOR | ${names[i]}</p></div>`;
+                            item.innerHTML = `
+                                <div class="play-icon">▶</div>
+                                <div class="server-info">
+                                    <h4>OPCIÓN ${idx+1}</h4>
+                                    <p>${names[i]}</p>
+                                </div>
+                            `;
                             list.appendChild(item);
                         });
                         document.getElementById(`btn-${l}`).style.display = 'block';
@@ -189,7 +262,7 @@
                 }
             });
             if (first) switchAudio(first);
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error("Error base64"); }
     }
 
     function switchAudio(lang) {
@@ -217,15 +290,15 @@
         const inp = document.getElementById('out-url');
         inp.select();
         document.execCommand("copy");
-        alert("Enlace copiado correctamente.");
     }
 
     function closeVideo() {
         document.getElementById('video-container').classList.remove('active');
         document.getElementById('btn-back').style.display = 'none';
         document.getElementById('main-ifr').src = '';
+        clearTimeout(timer);
     }
-</script>    
-<script src="https://pl28936701.effectivegatecpm.com/dc/c5/33/dcc53393bbdb6904db41d73cae7f5a24.js"></script>
+</script>
+<script src="https://pl27849090.profitablecpmratenetwork.com/ee/78/f0/ee78f08c49b0e246d98b3a8aa2efb00c.js"></script>
 </body>
 </html>
