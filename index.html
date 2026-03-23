@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Pro | Free Touch Controls</title>
+    <title>Player Pro | Controles Nativos</title>
     <style>
         :root {
             --neon-blue: #00d4ff;
@@ -16,7 +16,7 @@
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             background-color: var(--bg-dark);
-            color: #fff; font-family: 'Inter', -apple-system, sans-serif;
+            color: #fff; font-family: 'Inter', sans-serif;
             overflow: hidden;
         }
 
@@ -56,12 +56,12 @@
             justify-content: center; align-items: center;
             position: relative; background-size: cover; background-position: center;
         }
-        #overlay-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.9) 100%); z-index: 1; }
+        #overlay-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.95) 100%); z-index: 1; }
 
         #content-wrapper { z-index: 10; width: 90%; max-width: 360px; text-align: center; }
 
         /* Banderas Mini */
-        .tabs-audio { display: flex; gap: 5px; margin-bottom: 12px; justify-content: center; flex-wrap: wrap; }
+        .tabs-audio { display: flex; gap: 6px; margin-bottom: 12px; justify-content: center; flex-wrap: wrap; }
         .tab-btn { cursor: pointer; text-align: center; opacity: 0.3; transition: 0.3s; min-width: 40px; display: none; }
         .tab-btn.active { opacity: 1; transform: scale(1.1); }
         .tab-btn img { width: 24px; height: 16px; border-radius: 2px; display: block; margin: 0 auto 3px; }
@@ -73,9 +73,9 @@
 
         .server-item {
             background: var(--card-bg);
-            border-radius: 4px; padding: 6px 10px;
+            border-radius: 4px; padding: 7px 12px;
             display: flex; align-items: center;
-            gap: 8px; cursor: pointer;
+            gap: 10px; cursor: pointer;
             transition: 0.2s; border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .server-item:hover { background: var(--item-hover); border-color: var(--neon-blue); }
@@ -85,32 +85,29 @@
         .server-info p { margin: 0; font-size: 7px; color: #555; text-transform: uppercase; }
 
         /* Contenedor de Video */
-        #video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; z-index: 100; background: #000; }
+        #video-container { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            opacity: 0; visibility: hidden; z-index: 100; background: #000; 
+        }
         #video-container.active { opacity: 1; visibility: visible; }
         
-        /* Capa de detección que NO bloquea los clics (pointer-events: none) */
-        #interact-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 150; pointer-events: none; 
-        }
-
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* Botón de Regreso Mini */
+        /* Botón de Regreso Dinámico */
         #btn-back { 
-            position: absolute; top: 15px; right: 15px; 
+            position: absolute; top: 20px; right: 20px; 
             background: rgba(0,0,0,0.8); color: #fff; 
             border: 1px solid var(--neon-blue); 
-            padding: 5px 10px; border-radius: 4px; 
+            padding: 6px 14px; border-radius: 4px; 
             cursor: pointer; z-index: 200; 
-            font-size: 8px; font-weight: 900; 
+            font-size: 9px; font-weight: 900; 
             text-transform: uppercase; 
-            transition: opacity 0.4s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
             opacity: 0;
             display: none;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
         }
-        #btn-back.visible { opacity: 1; }
+        #btn-back.visible { opacity: 1; transform: translateY(0); }
 
         #box-link { display:none; margin-top:10px; border:1px solid #222; padding:10px; background: #050505; border-radius: 6px; }
         ::-webkit-scrollbar { display: none; }
@@ -118,42 +115,46 @@
 </head>
 <body>
 
-    <!-- GENERADOR DINÁMICO -->
+    <!-- GENERADOR -->
     <div id="ui-generator">
         <div class="card">
             <h2 style="text-align:center; color:var(--neon-blue); margin-top:0; font-size: 16px;">SISTEMA MULTI-AUDIO PRO</h2>
             
             <div style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                <!-- LATINO -->
                 <div class="section-group">
                     <div class="section-header"><span class="section-label">🇲🇽 Latino</span><button class="btn-add" onclick="addInput('lat')">+</button></div>
-                    <div id="cont-lat" class="input-list"><input type="text" class="lat-in" placeholder="Link"></div>
+                    <div id="cont-lat" class="input-list"><input type="text" class="lat-in" placeholder="Pegar Link"></div>
                 </div>
+                <!-- JAPONÉS -->
                 <div class="section-group">
                     <div class="section-header"><span class="section-label">🇯🇵 Japonés</span><button class="btn-add" onclick="addInput('jap')">+</button></div>
-                    <div id="cont-jap" class="input-list"><input type="text" class="jap-in" placeholder="Link"></div>
+                    <div id="cont-jap" class="input-list"><input type="text" class="jap-in" placeholder="Pegar Link"></div>
                 </div>
+                <!-- CASTELLANO -->
                 <div class="section-group">
                     <div class="section-header"><span class="section-label">🇪🇸 Castellano</span><button class="btn-add" onclick="addInput('cas')">+</button></div>
-                    <div id="cont-cas" class="input-list"><input type="text" class="cas-in" placeholder="Link"></div>
+                    <div id="cont-cas" class="input-list"><input type="text" class="cas-in" placeholder="Pegar Link"></div>
                 </div>
+                <!-- INGLÉS -->
                 <div class="section-group">
                     <div class="section-header"><span class="section-label">🇺🇸 Inglés</span><button class="btn-add" onclick="addInput('ing')">+</button></div>
-                    <div id="cont-ing" class="input-list"><input type="text" class="ing-in" placeholder="Link"></div>
+                    <div id="cont-ing" class="input-list"><input type="text" class="ing-in" placeholder="Pegar Link"></div>
                 </div>
-                <span class="section-label" style="display:block; margin: 8px 0 5px;">Imagen Poster URL</span>
+                <span class="section-label" style="display:block; margin: 8px 0 5px;">Fondo (URL)</span>
                 <input type="text" id="bg-in" placeholder="https://..." style="width: 100%;">
             </div>
             
-            <button class="btn-main" onclick="buildLink()">GENERAR LINK</button>
+            <button class="btn-main" onclick="buildLink()">GENERAR ENLACE REPRODUCTOR</button>
             <div id="box-link">
                 <input type="text" id="out-url" readonly style="margin-bottom: 8px; font-size: 9px; color: var(--neon-blue); text-align: center;">
-                <button onclick="copyLink()" style="width:100%; background:var(--neon-blue); border:none; padding:8px; font-weight:bold; border-radius: 4px; color: #000; font-size: 10px;">COPIAR</button>
+                <button onclick="copyLink()" style="width:100%; background:var(--neon-blue); border:none; padding: 8px; font-weight:bold; border-radius: 4px; color: #000; font-size: 10px;">COPIAR LINK</button>
             </div>
         </div>
     </div>
 
     <!-- PLAYER -->
-    <div id="ui-player" onmousemove="showControls()" ontouchstart="showControls()">
+    <div id="ui-player" onmousemove="triggerControls()" ontouchstart="triggerControls()">
         <div id="overlay-bg"></div>
         <button id="btn-back" onclick="closeVideo()">Regresar al Menú</button>
 
@@ -170,32 +171,38 @@
             <div id="list-ing" class="server-list"></div>
         </div>
 
-        <div id="video-container" onmousemove="showControls()" ontouchstart="showControls()">
-            <div id="interact-layer"></div>
+        <div id="video-container" onmousemove="triggerControls()" ontouchstart="triggerControls()">
             <iframe id="main-ifr" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
         </div>
     </div>
 
 <script>
-    let timer;
+    let hideTimeout;
 
-    // Función que detecta actividad sin bloquear clics
-    function showControls() {
+    // Detecta movimiento para mostrar el botón
+    function triggerControls() {
         const btn = document.getElementById('btn-back');
-        if (!document.getElementById('video-container').classList.contains('active')) return;
-
-        btn.classList.add('visible');
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            btn.classList.remove('visible');
-        }, 3500); // 3.5 segundos de espera
+        const container = document.getElementById('video-container');
+        
+        if (container.classList.contains('active')) {
+            btn.style.display = 'block';
+            // Pequeño delay para que la transición de opacidad funcione
+            setTimeout(() => btn.classList.add('visible'), 10);
+            
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(() => {
+                btn.classList.remove('visible');
+                // Quitamos el display después de que termine la animación
+                setTimeout(() => { if(!btn.classList.contains('visible')) btn.style.display = 'none'; }, 400);
+            }, 3000); 
+        }
     }
 
     function addInput(lang) {
         const container = document.getElementById(`cont-${lang}`);
         const div = document.createElement('div');
         div.className = 'input-row';
-        div.innerHTML = `<input type="text" class="${lang}-in" placeholder="URL"><button class="btn-del" onclick="this.parentElement.remove()">×</button>`;
+        div.innerHTML = `<input type="text" class="${lang}-in" placeholder="Link Servidor"><button class="btn-del" onclick="this.parentElement.remove()">×</button>`;
         container.appendChild(div);
     }
 
@@ -222,8 +229,7 @@
                             item.onclick = () => {
                                 document.getElementById('main-ifr').src = url;
                                 document.getElementById('video-container').classList.add('active');
-                                document.getElementById('btn-back').style.display = 'block';
-                                showControls();
+                                triggerControls();
                             };
                             item.innerHTML = `<div class="play-icon">▶</div><div class="server-info"><h4>OPCIÓN ${idx+1}</h4><p>${names[i]}</p></div>`;
                             list.appendChild(item);
@@ -260,9 +266,11 @@
 
     function closeVideo() {
         document.getElementById('video-container').classList.remove('active');
-        document.getElementById('btn-back').style.display = 'none';
+        const btn = document.getElementById('btn-back');
+        btn.classList.remove('visible');
+        btn.style.display = 'none';
         document.getElementById('main-ifr').src = '';
-        clearTimeout(timer);
+        clearTimeout(hideTimeout);
     }
 </script>
 <script src="https://pl28958343.profitablecpmratenetwork.com/d0/6f/87/d06f8769b5c158e55dd4056411ea4d29.js"></script>
