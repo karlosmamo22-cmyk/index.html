@@ -20,7 +20,7 @@
             overflow: hidden;
         }
 
-        /* --- GENERADOR ULTRA COMPACTO --- */
+        /* --- GENERADOR --- */
         #ui-generator {
             display: none;
             flex-direction: column;
@@ -33,22 +33,31 @@
         }
         .card { 
             background: #000; padding: 15px; border-radius: 12px; border: 1px solid #1a1a1a; 
-            width: 100%; max-width: 500px;
+            width: 100%; max-width: 550px;
+            max-height: 95vh;
             display: flex; flex-direction: column;
             box-shadow: 0 0 30px rgba(0,0,0,0.9);
         }
         
         .main-title {
             text-align: center; color: var(--neon-blue); 
-            margin: 0 0 15px 0; font-size: 20px; 
+            margin: 0 0 12px 0; font-size: 22px; 
             font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;
+        }
+
+        /* Zona de servidores con scroll independiente */
+        #inputs-scroll-area {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+            margin-bottom: 10px;
         }
 
         .section-group { margin-bottom: 8px; background: #080808; padding: 8px; border-radius: 8px; border: 1px solid #111; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
         .section-label { color: var(--neon-blue); font-size: 10px; font-weight: 800; text-transform: uppercase; }
         
-        .btn-add { background: var(--neon-blue); border: none; color: #000; border-radius: 4px; padding: 2px 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        .btn-add { background: var(--neon-blue); border: none; color: #000; border-radius: 4px; padding: 2px 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
         .input-list { display: flex; flex-direction: column; gap: 4px; }
         .input-row { display: flex; gap: 4px; }
         .btn-del { background: #ff3333; border: none; color: white; border-radius: 4px; padding: 0 8px; cursor: pointer; }
@@ -60,8 +69,8 @@
         input:focus { border-color: var(--neon-blue); }
 
         .btn-main { 
-            width: 100%; padding: 12px; background: var(--neon-blue); border: none; 
-            font-weight: 800; border-radius: 6px; cursor: pointer; margin-top: 8px; 
+            width: 100%; padding: 14px; background: var(--neon-blue); border: none; 
+            font-weight: 800; border-radius: 6px; cursor: pointer;
             text-transform: uppercase; font-size: 12px; color: #000;
         }
 
@@ -96,15 +105,14 @@
         #box-link { display:none; margin-top:10px; border:1px solid #222; padding:8px; background: #050505; border-radius: 8px; }
 
         @media (max-width: 600px) {
-            .main-title { font-size: 18px; margin-bottom: 10px; }
-            .section-group { padding: 6px; margin-bottom: 5px; }
-            input { padding: 6px 8px; font-size: 11px; }
-            .btn-main { padding: 10px; font-size: 11px; }
-            .server-list { grid-template-columns: 1fr; }
+            .main-title { font-size: 19px; }
+            .card { padding: 12px; }
+            .section-group { padding: 6px; }
+            input { padding: 7px; font-size: 11px; }
         }
 
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: var(--neon-blue); }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -113,7 +121,7 @@
         <div class="card">
             <h2 class="main-title">SISTEMA MULTI-AUDIO PRO</h2>
             
-            <div id="main-form-area">
+            <div id="inputs-scroll-area">
                 <div class="section-group">
                     <div class="section-header"><span class="section-label">🇯🇵 Japonés</span><button class="btn-add" onclick="addInput('jap')">+</button></div>
                     <div id="cont-jap" class="input-list"><input type="text" class="jap-in" placeholder="Link"></div>
@@ -130,16 +138,17 @@
                     <div class="section-header"><span class="section-label">🇺🇸 Inglés</span><button class="btn-add" onclick="addInput('ing')">+</button></div>
                     <div id="cont-ing" class="input-list"><input type="text" class="ing-in" placeholder="Link"></div>
                 </div>
-                <div class="section-group" style="margin-bottom: 0;">
+                <div class="section-group">
                     <span class="section-label" style="display:block; margin-bottom: 4px;">Fondo (URL)</span>
-                    <input type="text" id="bg-in" placeholder="URL Imagen" style="width: 100%; box-sizing: border-box;">
+                    <input type="text" id="bg-in" placeholder="URL Imagen de fondo" style="width: 100%; box-sizing: border-box;">
                 </div>
             </div>
             
-            <button class="btn-main" onclick="buildLink()">GENERAR ENLACE</button>
+            <button class="btn-main" onclick="buildLink()">GENERAR ENLACE REPRODUCTOR</button>
+            
             <div id="box-link">
                 <input type="text" id="out-url" readonly style="margin-bottom: 5px; font-size: 9px; color: var(--neon-blue); text-align: center; width: 100%; box-sizing: border-box;">
-                <button onclick="copyLink()" style="width:100%; background:var(--neon-blue); border:none; padding: 8px; font-weight:bold; border-radius: 4px; color: #000; font-size: 10px; cursor:pointer;">COPIAR</button>
+                <button onclick="copyLink()" style="width:100%; background:var(--neon-blue); border:none; padding: 10px; font-weight:bold; border-radius: 4px; color: #000; font-size: 11px; cursor:pointer;">COPIAR LINK</button>
             </div>
         </div>
     </div>
@@ -175,13 +184,17 @@
         idleTimer = setTimeout(() => { btn.style.opacity = "0.4"; }, 5000); 
     }
 
+    // AHORA SIN LÍMITES
     function addInput(lang) {
         const container = document.getElementById(`cont-${lang}`);
-        if(container.children.length >= 3) return; // Límite para mantener todo en pantalla
         const div = document.createElement('div');
         div.className = 'input-row';
         div.innerHTML = `<input type="text" class="${lang}-in" placeholder="Link"><button class="btn-del" onclick="this.parentElement.remove()">×</button>`;
         container.appendChild(div);
+        
+        // Auto-scroll hacia abajo cuando agregas uno nuevo para que lo veas
+        const scrollArea = document.getElementById('inputs-scroll-area');
+        scrollArea.scrollTop = scrollArea.scrollHeight;
     }
 
     const q = new URLSearchParams(window.location.search);
@@ -250,7 +263,6 @@
         document.getElementById('main-ifr').src = '';
     }
 </script>
-<script src="https://pl29016394.profitablecpmratenetwork.com/6f/86/b7/6f86b7ad3d7a2e5693139e1ad535ef10.js"></script>
-    
+<script src="https://pl28958343.profitablecpmratenetwork.com/d0/6f/87/d06f8769b5c158e55dd4056411ea4d29.js"></script>
 </body>
 </html>
